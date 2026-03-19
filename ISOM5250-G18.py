@@ -115,3 +115,36 @@ user_input = st.text_area(
 
 # 4. Processing & Output Section
 if st.button("Analyze Feedback"):
+    # Ensure the user actually typed something long enough to summarize
+    if len(user_input.strip()) < 30:
+        st.warning("Please paste a longer email (at least 30 characters) for the AI to analyze.")
+    else:
+        st.markdown("---")
+        st.markdown("### Step 2: AI Analysis Results")
+        
+        with st.spinner("Processing text through AI pipelines..."):
+            try:
+                # --- Pipeline 1: Summarization ---
+                # We limit max_length to keep the summary concise for the customer service rep
+                summary_result = summarizer(user_input, max_length=50, min_length=10, do_sample=False)
+                st.subheader("📝 Core Issue Summary")
+                st.info(summary_result[0]['summary_text'])
+
+                # --- Pipeline 2: Emotion Classification ---
+                emotion_result = emotion_classifier(user_input)
+                label = emotion_result[0]['label']
+                score = emotion_result[0]['score']
+                
+                # Map dair-ai/emotion model labels to business-friendly terms
+                emotion_map = {
+                    "LABEL_0": "Sadness 😢", "LABEL_1": "Joy 😄", 
+                    "LABEL_2": "Love 🥰", "LABEL_3": "Anger 😡", 
+                    "LABEL_4": "Fear 😨", "LABEL_5": "Surprise 😲"
+                }
+                final_emotion = emotion_map.get(label, "Unknown Emotion")
+                
+                st.subheader("🧠 Detected Customer Emotion")
+                st.success(f"**{final_emotion}** (AI Confidence Score: {score*100:.1f}%)")
+                
+            except Exception as e:
+                st.error(f"An error occurred during analysis: {e}")
