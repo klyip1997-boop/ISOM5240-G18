@@ -11,7 +11,7 @@ st.write("Welcome to the automated feedback triage system. Paste a customer emai
 def load_pipelines():
     # Pipeline 1 (Pre-trained): Summarization model to shorten emails
     # Blueprint specified: sshleifer/distilbart-cnn-12-6
-    summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+    summarizer = pipeline("summarization", model="Falconsai/text_summarization")
     
     # Pipeline 2 (Fine-tuned): Emotion Classifier
     # IMPORTANT: Replace YOUR_HF_USERNAME below with your actual Hugging Face username!
