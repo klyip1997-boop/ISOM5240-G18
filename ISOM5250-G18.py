@@ -14,7 +14,7 @@ def load_pipelines():
     # Pipeline 2: Your Custom Fine-Tuned Emotion Classifier 
     # REPLACE THIS STRING with your actual Hugging Face username and repo name!
     # Example: "johnsmith/sephora-emotion-classifier"
-    emotion_classifier = pipeline("text-classification", model="YOUR_HF_USERNAME/sephora-emotion-classifier")
+    emotion_classifier = pipeline("text-classification", model="klyipaf/emotion-classifier")
     
     return auto_replier, emotion_classifier
 
