@@ -4,7 +4,7 @@ from transformers import pipeline
 # Page Configuration
 st.set_page_config(page_title="Sephora Customer Feedback AI Triage System", page_icon="💄", layout="centered")
 st.title("💄 Sephora Customer Feedback AI Triage System")
-st.write("Welcome to the automated feedback triage system. Paste a customer email below to summarize the core issue and detect the exact emotion for priority routing.")
+st.write("Welcome to the automated feedback triage system. Paste a customer feedback below to summarize the core issue and detect the exact emotion for priority routing.")
 
 # load models
 @st.cache_resource
