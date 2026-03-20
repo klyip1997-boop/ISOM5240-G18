@@ -1,12 +1,12 @@
 import streamlit as st
 from transformers import pipeline
 
-# 1. Page Configuration & UI Setup
-st.set_page_config(page_title="Sephora AI Analyzer", page_icon="💄", layout="centered")
-st.title("💄 Sephora Customer Feedback AI")
+# Page Configuration
+st.set_page_config(page_title="Sephora Customer Feedback AI Triage System", page_icon="💄", layout="centered")
+st.title("💄 Sephora Customer Feedback AI Triage System")
 st.write("Welcome to the automated feedback triage system. Paste a customer email below to summarize the core issue and detect the exact emotion for priority routing.")
 
-# 2. Load Models (Cached for high efficiency)
+# load models
 @st.cache_resource
 def load_pipelines():
     # Pipeline 1 (Pre-trained): Summarization model to shorten emails
@@ -21,26 +21,26 @@ def load_pipelines():
     return summarizer, emotion_classifier
 
 # Load models with a visual spinner for the user
-with st.spinner("Initializing Sephora AI Models from Hugging Face..."):
+with st.spinner("Initializing AI Models ..."):
     try:
         summarizer, emotion_classifier = load_pipelines()
         st.success("System Ready!")
     except Exception as e:
-        st.error(f"System Error: Could not load models. Did you replace 'YOUR_HF_USERNAME'? Details: {e}")
+        st.error(f"System Error: Could not load models. Details: {e}")
 
-# 3. User Input Section
-st.markdown("### Step 1: Input Customer Email")
+# User input feedback
+st.markdown("### Step 1: Input Customer Feedback")
 user_input = st.text_area(
     "Paste the email text here:", 
     height=150, 
-    placeholder="Example: I am absolutely furious! My package arrived completely destroyed and customer service has been ignoring my calls for a week. I demand a refund immediately."
+    placeholder="Example: I’m contacting you to report an issue with my recent order, #SF-10493827, placed on March 8, 2026. The package arrived on March 14, but several items were not in acceptable condition. The Glow Serum bottle was leaking inside the box, and the outer packaging for the Mini Eyeshadow Palette was crushed and partially opened. The protective padding also seemed insufficient for glass items. I reached out through live chat on March 15 and provided photos of the damage as requested. The agent confirmed the claim and said I would receive a replacement confirmation email within 24–48 hours. It has now been five days and I still haven’t received an update, tracking number, or refund notice. I’ve checked my spam folder and my Sephora account order history, but there is no status change.Please either ship replacements for the damaged products immediately or issue a full refund for the affected items. I would appreciate written confirmation of the resolution and an estimated timeline."
 )
 
-# 4. Processing & Output Section
+# Process and output result
 if st.button("Analyze Feedback"):
     # Ensure the user actually typed something long enough to summarize
     if len(user_input.strip()) < 30:
-        st.warning("Please paste a longer email (at least 30 characters) for the AI to analyze.")
+        st.warning("Please paste a longer feedback (at least 30 characters) for the AI to analyze.")
     else:
         st.markdown("---")
         st.markdown("### Step 2: AI Analysis Results")
@@ -48,7 +48,6 @@ if st.button("Analyze Feedback"):
         with st.spinner("Processing text through AI pipelines..."):
             try:
                 # --- Pipeline 1: Summarization ---
-                # We limit max_length to keep the summary concise for the customer service rep
                 summary_result = summarizer(user_input, max_length=50, min_length=10, do_sample=False)
                 st.subheader("📝 Core Issue Summary")
                 st.info(summary_result[0]['summary_text'])
@@ -71,4 +70,3 @@ if st.button("Analyze Feedback"):
                 
             except Exception as e:
                 st.error(f"An error occurred during analysis: {e}")
-
